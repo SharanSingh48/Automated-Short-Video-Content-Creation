@@ -34,7 +34,7 @@ EXAMPLES:
 DO NOT include extra commentary or explanations — just the list.
 """
 
-# Query LLaMA 3
+
 response = ollama.chat(
     model="llama3.1:8b",
     messages=[
@@ -49,25 +49,25 @@ video_path = 'video.mp4'
 output_dir = 'output_clips'
 os.makedirs(output_dir, exist_ok=True)
 
-# Get video dimensions
+
 probe = ffmpeg.probe(video_path)
 video_stream = next(s for s in probe['streams'] if s['codec_type'] == 'video')
 width = int(video_stream['width'])
 height = int(video_stream['height'])
 
-# Calculate 9:16 crop (centered)
+
 target_height = height
 target_width = int(height * 9 / 16)
 x_offset = (width - target_width) // 2
 
-# Parse input
+
 entries = re.findall(r'(\d{2}:\d{2}:\d{2})\s*-\s*\"([^"]+)\"', input_data)
 
-# Sanitize file names
+
 def safe_filename(title):
     return re.sub(r'[\\/*?:"<>|]', '', title)
 
-# Process each clip
+
 for i, (start_time, title) in enumerate(entries, 1):
     safe_title = safe_filename(title)
     output_path = os.path.join(output_dir, f"{i:02d} - {safe_title}.mp4")
@@ -91,4 +91,5 @@ for i, (start_time, title) in enumerate(entries, 1):
         .overwrite_output()
         .run()
     )
+
 
