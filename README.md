@@ -58,6 +58,7 @@ pip install -r requirements.txt
 ```
 ### 3. Install required tools
 [FFmpeg](https://ffmpeg.org/)
+<br>
 [Ollama](https://ollama.com/)
 ### 4. Run the pipeline
 ```bash
