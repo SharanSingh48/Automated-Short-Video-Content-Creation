@@ -1,0 +1,9 @@
+yt-dlp==2025.09.24
+whisper==2023.12.18
+whisperx==1.1.0
+pysubs2==1.1.3
+torch==2.2.0
+transformers==4.43.0
+ollama==0.0.1
+ffmpeg-python==0.2.0
+numpy==1.27.0
