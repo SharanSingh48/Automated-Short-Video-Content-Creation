@@ -40,6 +40,7 @@ The system can:
 ![Before](doc/Before.PNG)
 <br>
 **After**
+<br>
 ![After(Sample Short)](doc/sample.gif)  
 
 ---
