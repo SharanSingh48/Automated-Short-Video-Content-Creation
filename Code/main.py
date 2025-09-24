@@ -10,7 +10,7 @@ def run_script(script_name, *args):
         sys.exit(1)
 
 def main():
-    # Step 1: Get YouTube video URL from user
+   
     video_url = input("Enter the YouTube video URL: ").strip()
 
     print("\nRunning: download_yt_video.py...")
@@ -29,3 +29,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
