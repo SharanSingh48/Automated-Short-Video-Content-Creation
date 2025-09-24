@@ -45,3 +45,25 @@ The system can:
 ```bash
 git clone <repository_url>
 cd automated-shorts-generator
+```
+### 2. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+### 3. Install required tools
+
+### 4. Run the pipeline
+```bash
+Automated-Short-Video-Content-Creation/Code/main.py
+```
+### 5. Check output
+Generated Shorts will be stored in:
+```bash
+Automated-Short-Video-Content-Creation/final_output_clips
+```
+##Future Scope
+
+- **Multi-language subtitle support**
+- **AI-generated thumbnails**
+- **Direct upload to YouTube via API**
+- **Automatic background music & effects**
