@@ -61,7 +61,7 @@ Generated Shorts will be stored in:
 ```bash
 Automated-Short-Video-Content-Creation/final_output_clips
 ```
-##Future Scope
+## Future Scope
 
 - **Multi-language subtitle support**
 - **AI-generated thumbnails**
