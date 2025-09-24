@@ -35,7 +35,9 @@ The system can:
 ![Pipeline Overview](docs/pipeline.png)  
 
 **Sample Short**  
-![Sample Short](examples/sample_output.gif)  
+![Before](docs/Before.PNG)
+
+![After(Sample Short)](docs/sample.gif)  
 
 ---
 
