@@ -57,7 +57,8 @@ cd automated-shorts-generator
 pip install -r requirements.txt
 ```
 ### 3. Install required tools
-
+[FFmpeg](https://ffmpeg.org/)
+[Ollama](https://ollama.com/)
 ### 4. Run the pipeline
 ```bash
 Automated-Short-Video-Content-Creation/Code/main.py
