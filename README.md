@@ -32,12 +32,12 @@ The system can:
 ## Screenshots
 
 **Pipeline Overview**  
-![Pipeline Overview](docs/pipeline.png)  
+![Pipeline Overview](doc/pipeline.png)  
 
 **Sample Short**  
-![Before](docs/Before.PNG)
+![Before](doc/Before.PNG)
 
-![After(Sample Short)](docs/sample.gif)  
+![After(Sample Short)](doc/sample.gif)  
 
 ---
 
