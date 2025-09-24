@@ -6,32 +6,27 @@ from pysubs2 import SSAFile, SSAEvent, SSAStyle
 import pysubs2
 import glob
 import subprocess
-# Specify the folder path
-folder_path = r"C:\Users\shara\Desktop\Final_yt_project\output_clips"
 
-# List all files
+folder_path = os.path.join(os.path.dirname(__file__), "output_clips")
+
+
 files = os.listdir(folder_path)
 
-# Filter out only files (ignore subfolders)
+
 file_names = [f for f in files if os.path.isfile(os.path.join(folder_path, f))]
 
 
 def generate_word_srt(input_file, output_srt):
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    # Step 1: Load ASR model
     model = whisperx.load_model("large-v3", device=device, compute_type="float32")
 
-    # Step 2: Transcribe to get segments
     result = model.transcribe(input_file)
 
-    # Step 3: Load alignment model
     model_a, metadata = whisperx.load_align_model(language_code=result["language"], device=device)
 
-    # Step 4: Align to get word-level timestamps
     aligned_result = whisperx.align(result["segments"], model_a, metadata, input_file, device=device)
 
-    # Step 5: Write to .srt
     with open(output_srt, "w", encoding="utf-8") as f:
         for i, word in enumerate(aligned_result["word_segments"]):
             f.write(f"{i + 1}\n")
@@ -61,7 +56,6 @@ def adjust_srt_timing(input_path, output_path):
     with open(input_path, "r", encoding="utf-8") as f:
         srt = f.read()
 
-    # Match SRT blocks
     pattern = re.compile(r"(\d+)\n([\d:,]+) --> ([\d:,]+)\n(.*?)\n", re.DOTALL)
     entries = pattern.findall(srt)
 
@@ -70,42 +64,36 @@ def adjust_srt_timing(input_path, output_path):
     for i in range(len(entries)):
         index, start, end, text = entries[i]
 
-        # Use start time of next block as current end, if not last
         if i < len(entries) - 1:
             next_start = entries[i + 1][1]
             end = next_start
 
         adjusted_entries.append(f"{index}\n{start} --> {end}\n{text}\n")
 
-    # Write adjusted SRT
     with open(output_path, "w", encoding="utf-8") as f:
         f.writelines(adjusted_entries)
 
 def srt_to_ass_with_adjusted_style(srt_path, ass_path):
-    # Load the SRT file
     subs = pysubs2.load(srt_path, encoding="utf-8")
 
-    # Define an improved style
     style = SSAStyle()
     style.fontname = "Arial"
-    style.fontsize = 18                     # Slightly smaller
-    style.primarycolor = pysubs2.Color(255, 255, 255, 0)  # White
-    style.outlinecolor = pysubs2.Color(0, 0, 0, 0)        # Black outline
-    style.backcolor = pysubs2.Color(0, 0, 0, 127)         # Transparent black bg (optional)
+    style.fontsize = 18                     
+    style.primarycolor = pysubs2.Color(255, 255, 255, 0)  
+    style.outlinecolor = pysubs2.Color(0, 0, 0, 0)       
+    style.backcolor = pysubs2.Color(0, 0, 0, 127)         
     style.bold = True
     style.shadow = 0
-    style.outline = 1                       # Soft outline for better readability
-    style.alignment = 2                     # Bottom-center
+    style.outline = 1                      
+    style.alignment = 2                     
     style.marginl = 10
     style.marginr = 10
-    style.marginv = 70                      # ↓ Lower on screen (was 100 before)
+    style.marginv = 70                    
 
-    # Apply the style
     subs.styles["Default"] = style
     for line in subs:
         line.style = "Default"
 
-    # Save ASS file
     subs.save(ass_path)
 
 def delete_all_files(folder_path):
@@ -114,30 +102,33 @@ def delete_all_files(folder_path):
         if os.path.isfile(file):
             os.remove(file)
 
+repo_dir = os.path.dirname(__file__)
+output_clips_dir = os.path.join(repo_dir, "output_clips")
+temp_dir = os.path.join(repo_dir, "temp")
+final_output_dir = os.path.join(repo_dir, "final_output_clips")
 
-# Run
 for i in file_names:
-    generate_word_srt(f"C:\\Users\\shara\\Desktop\\Final_yt_project\\output_clips\\{i}", "C:\\Users\\shara\\Desktop\\Final_yt_project\\temp\\word_by_word.srt")
-    adjust_srt_timing(r"C:\Users\shara\Desktop\Final_yt_project\temp\word_by_word.srt", r"C:\Users\shara\Desktop\Final_yt_project\temp\adjusted_word_by_word.srt")
-    srt_to_ass_with_adjusted_style(r"C:\Users\shara\Desktop\Final_yt_project\temp\adjusted_word_by_word.srt", r"C:\Users\shara\Desktop\Final_yt_project\temp\styled_output.ass")
+    input_clip = os.path.join(output_clips_dir, i)
+    word_srt_file = os.path.join(temp_dir, "word_by_word.srt")
+    adjusted_srt_file = os.path.join(temp_dir, "adjusted_word_by_word.srt")
+    styled_ass_file = os.path.join(temp_dir, "styled_output.ass")
+    output_video_file = os.path.join(final_output_dir, i)
 
-    input_video = f"C:\\Users\\shara\\Desktop\\Final_yt_project\\output_clips\\{i}"
-    subtitle_file = r"C:\Users\shara\Desktop\Final_yt_project\temp\styled_output.ass"
-    output_video = f"C:\\Users\\shara\\Desktop\\Final_yt_project\\final_output_clips\\{i}"
+    generate_word_srt(input_clip, word_srt_file)
+    adjust_srt_timing(word_srt_file, adjusted_srt_file)
+    srt_to_ass_with_adjusted_style(adjusted_srt_file, styled_ass_file)
 
-    # Convert to FFmpeg-safe Windows path: escape colon
-    subtitle_path = subtitle_file.replace("\\", "/").replace(":", "\\:")
-
-    # Use shlex.quote to properly quote for subprocess
+    subtitle_path = styled_ass_file.replace("\\", "/").replace(":", "\\:")
     vf_filter = f"ass='{subtitle_path}'"
-
     command = [
         "ffmpeg",
-        "-i", input_video,
+        "-i", input_clip,
         "-vf", vf_filter,
         "-c:a", "copy",
-        output_video
+        output_video_file
     ]
     subprocess.run(command)
-    delete_all_files(r"C:\Users\shara\Desktop\Final_yt_project\temp")
+
+    delete_all_files(temp_dir)
+
 
