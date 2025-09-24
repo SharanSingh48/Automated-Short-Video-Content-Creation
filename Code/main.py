@@ -25,8 +25,9 @@ def main():
     print("\nRunning: clip_srt.py...")
     run_script("clip_srt.py")
 
-    print("\n Task Completed 🎇")
+    print("\n Task Completed")
 
 if __name__ == "__main__":
     main()
+
 
